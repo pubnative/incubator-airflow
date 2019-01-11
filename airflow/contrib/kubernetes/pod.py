@@ -69,6 +69,8 @@ class Pod:
     :param configmaps: A list containing names of configmaps object
         mounting env variables to the pod
     :type configmaps: list[str]
+    :param dnspolicy: Specify a dnspolicy for the pod
+    :type dnspolicy: str
     """
     def __init__(
             self,
@@ -94,7 +96,8 @@ class Pod:
             hostnetwork=False,
             tolerations=None,
             security_context=None,
-            configmaps=None
+            configmaps=None,
+            dnspolicy=None
     ):
         self.image = image
         self.envs = envs or {}
@@ -119,3 +122,4 @@ class Pod:
         self.tolerations = tolerations or []
         self.security_context = security_context
         self.configmaps = configmaps or []
+        self.dnspolicy = dnspolicy

@@ -88,6 +88,8 @@ class KubernetesPodOperator(BaseOperator):
     :param configmaps: A list of configmap names objects that we
         want mount as env variables
     :type configmaps: list[str]
+    :param dnspolicy: Specify a dnspolicy for the pod
+    :type dnspolicy: str
     """
     template_fields = ('cmds', 'arguments', 'env_vars', 'config_file')
 
@@ -122,6 +124,7 @@ class KubernetesPodOperator(BaseOperator):
             pod.affinity = self.affinity
             pod.node_selectors = self.node_selectors
             pod.hostnetwork = self.hostnetwork
+            pod.dnspolicy = self.dnspolicy
             pod.tolerations = self.tolerations
             pod.configmaps = self.configmaps
             pod.security_context = self.security_context
@@ -176,6 +179,7 @@ class KubernetesPodOperator(BaseOperator):
                  tolerations=None,
                  configmaps=None,
                  security_context=None,
+                 dnspolicy=None,
                  *args,
                  **kwargs):
         super(KubernetesPodOperator, self).__init__(*args, **kwargs)
@@ -207,3 +211,4 @@ class KubernetesPodOperator(BaseOperator):
         self.tolerations = tolerations or []
         self.configmaps = configmaps or []
         self.security_context = security_context or {}
+        self.dnspolicy = dnspolicy
