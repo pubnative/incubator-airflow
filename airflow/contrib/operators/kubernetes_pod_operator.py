@@ -78,8 +78,12 @@ class KubernetesPodOperator(BaseOperator):
         /airflow/xcom/return.json in the container will also be pushed to an
         XCom when the container completes.
     :type xcom_push: bool
-    :param tolerations: Kubernetes tolerations
-    :type list of tolerations
+    :param hostnetwork: If True enable host networking on the pod
+    :type hostnetwork: bool
+    :param tolerations: A list of kubernetes tolerations
+    :type tolerations: list tolerations
+    :param dnspolicy: Specify a dnspolicy for the pod
+    :type dnspolicy: str
     """
     template_fields = ('cmds', 'arguments', 'env_vars', 'config_file')
 
@@ -114,6 +118,7 @@ class KubernetesPodOperator(BaseOperator):
             pod.affinity = self.affinity
             pod.node_selectors = self.node_selectors
             pod.hostnetwork = self.hostnetwork
+            pod.dnspolicy = self.dnspolicy
             pod.tolerations = self.tolerations
 
             launcher = pod_launcher.PodLauncher(kube_client=client,
@@ -163,6 +168,7 @@ class KubernetesPodOperator(BaseOperator):
                  is_delete_operator_pod=False,
                  hostnetwork=False,
                  tolerations=None,
+                 dnspolicy=None,
                  *args,
                  **kwargs):
         super(KubernetesPodOperator, self).__init__(*args, **kwargs)
@@ -192,3 +198,4 @@ class KubernetesPodOperator(BaseOperator):
         self.is_delete_operator_pod = is_delete_operator_pod
         self.hostnetwork = hostnetwork
         self.tolerations = tolerations or []
+        self.dnspolicy = dnspolicy
