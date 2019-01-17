@@ -62,6 +62,8 @@ class Pod:
     :type tolerations: list
     :param dnspolicy: Specify a dnspolicy for the pod
     :type dnspolicy: str
+    :param pod_runtime_info_envs: environment variables about pod runtime information (ip, namespace, nodeName, podName)
+    :type pod_runtime_info_envs: list of PodRuntimeEnv
     """
     def __init__(
             self,
@@ -87,6 +89,7 @@ class Pod:
             hostnetwork=False,
             tolerations=None,
             dnspolicy=None,
+            pod_runtime_info_envs=None,
     ):
         self.image = image
         self.envs = envs or {}
@@ -110,3 +113,4 @@ class Pod:
         self.hostnetwork = hostnetwork or False
         self.tolerations = tolerations or []
         self.dnspolicy = dnspolicy
+        self.pod_runtime_info_envs = pod_runtime_info_envs or []
