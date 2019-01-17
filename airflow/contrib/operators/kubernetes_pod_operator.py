@@ -21,6 +21,7 @@ from airflow.utils.decorators import apply_defaults
 from airflow.contrib.kubernetes import kube_client, pod_generator, pod_launcher
 from airflow.contrib.kubernetes.pod import Resources
 from airflow.utils.state import State
+from airflow.contrib.kubernetes.pod_runtime_info_env import PodRuntimeInfoEnv  # noqa
 
 
 class KubernetesPodOperator(BaseOperator):
@@ -90,6 +91,8 @@ class KubernetesPodOperator(BaseOperator):
     :type configmaps: list[str]
     :param dnspolicy: Specify a dnspolicy for the pod
     :type dnspolicy: str
+    :param pod_runtime_info_envs: environment variables about pod runtime information (ip, namespace, nodeName, podName)
+    :type pod_runtime_info_envs: list of PodRuntimeEnv
     """
     template_fields = ('cmds', 'arguments', 'env_vars', 'config_file')
 
@@ -128,6 +131,7 @@ class KubernetesPodOperator(BaseOperator):
             pod.tolerations = self.tolerations
             pod.configmaps = self.configmaps
             pod.security_context = self.security_context
+            pod.pod_runtime_info_envs = self.pod_runtime_info_envs
 
             launcher = pod_launcher.PodLauncher(kube_client=client,
                                                 extract_xcom=self.xcom_push)
@@ -180,6 +184,7 @@ class KubernetesPodOperator(BaseOperator):
                  configmaps=None,
                  security_context=None,
                  dnspolicy=None,
+                 pod_runtime_info_envs=None,
                  *args,
                  **kwargs):
         super(KubernetesPodOperator, self).__init__(*args, **kwargs)
@@ -212,3 +217,4 @@ class KubernetesPodOperator(BaseOperator):
         self.configmaps = configmaps or []
         self.security_context = security_context or {}
         self.dnspolicy = dnspolicy
+        self.pod_runtime_info_envs = pod_runtime_info_envs or []
