@@ -24,13 +24,6 @@ AIRFLOW_ROOT="$DIRNAME/../../../.."
 
 set -e
 
-if [ "${VM_DRIVER:-none}" != "none" ]; then
-    ENVCONFIG=$(minikube docker-env)
-    if [ $? -eq 0 ]; then
-      eval $ENVCONFIG
-    fi
-fi
-
 echo "Airflow directory $AIRFLOW_ROOT"
 echo "Airflow Docker directory $DIRNAME"
 

@@ -25,5 +25,4 @@ cp -R contrib/example_dags/example_kubernetes_*.py /root/airflow/dags/ && \
 cp -a contrib/example_dags/libs /root/airflow/dags/ && \
 airflow initdb && \
 alembic upgrade heads && \
-(airflow create_user -u airflow -l airflow -f jon -e airflow@apache.org -r Admin -p airflow || true) && \
-echo "retrieved from mount" > /root/test_volume/test.txt
+(airflow create_user -u airflow -l airflow -f jon -e airflow@apache.org -r Admin -p airflow || true) 
