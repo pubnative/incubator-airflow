@@ -24,22 +24,9 @@ AIRFLOW_ROOT="$DIRNAME/../../../.."
 
 set -e
 
-echo "Airflow directory $AIRFLOW_ROOT"
-echo "Airflow Docker directory $DIRNAME"
-
-if [[ ${PYTHON_VERSION} == '3' ]]; then
-  PYTHON_DOCKER_IMAGE=python:3.6-slim
-else
-  PYTHON_DOCKER_IMAGE=python:2.7-slim
-fi
-
-cd $AIRFLOW_ROOT
-docker run -ti --rm -v ${AIRFLOW_ROOT}:/airflow \
-    -w /airflow ${PYTHON_DOCKER_IMAGE} ./scripts/ci/kubernetes/docker/compile.sh \
-
-sudo rm -rf ${AIRFLOW_ROOT}/airflow/www_rbac/node_modules
-
-echo "Copy distro $AIRFLOW_ROOT/dist/*.tar.gz ${DIRNAME}/airflow.tar.gz"
-cp $AIRFLOW_ROOT/dist/*.tar.gz ${DIRNAME}/airflow.tar.gz
-cd $DIRNAME && docker build --pull $DIRNAME --tag=${IMAGE}:${TAG}
-rm $DIRNAME/airflow.tar.gz
+cd "$AIRFLOW_ROOT"
+docker build . \
+  -f scripts/ci/kubernetes/docker/Dockerfile \
+  --rm \
+  --pull \
+  --tag="${IMAGE}:${TAG}"
